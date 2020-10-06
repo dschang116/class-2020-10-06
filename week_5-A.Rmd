@@ -6,6 +6,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
+library(ggplot2)
 ```
 
 
@@ -13,6 +14,12 @@ library(tidyverse)
 
 **Prompt:** Create a graphic of the posterior distribution of the [538 forecast](https://projects.fivethirtyeight.com/2020-election-forecast/) for Biden's electoral vote total. Recall the example given in Chapter 3 of *The Primer*.
 
+```{r}
+scene_1 <- read_csv("data_538/election-forecasts-2020/presidential_ev_probabilities_2020.csv")
+
+ggplot(scene_1, aes(total_ev, evprob_chal)) +
+  geom_col()
+```
 
 
 ### Scene 2
@@ -26,8 +33,6 @@ b) Assume that Biden implements the campaign, create the actual Preceptor Table 
 c) What does the actual Preceptor Table look like now?
 
 
-
-
 ### Scene 3
 
 **Prompt:** Probability distributions are confusing. Using 538's posterior probability distribution of Biden's electoral votes, answer the following question. (Recall that there are 538 total electoral votes. For this exercise, you may assume that every EV goes to either Biden or Trump. In other words, we are, by assumption, eliminating the possibility of a third party candidate winning any votes.)
@@ -35,12 +40,34 @@ c) What does the actual Preceptor Table look like now?
 
 a) What is the probability that Biden wins more than 300 electoral votes?
 
+```{r}
+scene_3a <- scene_1 %>%
+  filter(total_ev > 300) %>%
+  summarise(prob = sum(evprob_chal))
+```
+
 b) What is the probability that Biden wins exactly 531 electoral votes? Is this answer consistent with your answer in a)?
+
+```{r}
+scene_3b <- scene_1 %>%
+  filter(total_ev == 531) %>%
+  summarise(prob = sum(evprob_chal))
+```
+
 
 c) What is the probability of a "very close" election, defined as Biden winning between 269 and 289 electoral votes, inclusive?
 
+```{r}
+scene_3c <- scene_1 %>%
+  filter(total_ev >= 269 & total_ev <= 289) %>%
+  summarise(prob = sum(evprob_chal))
+```
+
 d) How many unique electoral vote totals does 538 view as impossible for Biden to achieve? Some of these are truly impossible. Given an example of one of these. Why does 538 think that some vote totals, while theoretically possible, should be given zero probability in its posterior?
 
+```{r}
+
+```
 
 
 
